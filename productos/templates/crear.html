@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear productos</title>
+</head>
+<body>
+    <h1>Agregar Productos</h1>
+    <form id="formulario">
+        <label for="nombre">nombre</label>
+        <input type="text" id="nombre">
+        
+        <label for="precio">precio</label>
+        <input type="number" id="precio">
+        
+        <label for="descripcion">Descripción</label>
+        <textarea id="descripcion" name="descripcion"></textarea>
+        
+        <label for="imagen">imagen</label>
+        <input type="file" id="imagen">
+
+        <button type="submit">Crear</button>
+        
+        
+    </form>
+
+    <p id="mensaje"></p>
+
+    <script>
+        const formulario = document.getElementById('formulario');
+
+        formulario.addEventListener('submit', function(event){
+            event.preventDefault();
+
+            const datos = new FormData();
+
+            datos.append(
+                'nombre',
+                document.getElementById('nombre').value
+            );
+
+            datos.append(
+                'precio',
+                document.getElementById('precio').value
+            );
+
+            datos.append(
+                'descripcion',
+                document.getElementById('descripcion').value
+            );
+
+            datos.append(
+                'imagen',
+                document.getElementById('imagen').files[0]
+            );
+
+            fetch('/productos/api/productos/crear/', {
+                method: 'POST',
+                body:datos
+                
+            })
+            .then(response => response.json())
+            .then(data => {
+
+                document.getElementById('mensaje').textContent = data.mensaje;
+                formulario.reset();
+
+                window.location.href = '/productos/';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>

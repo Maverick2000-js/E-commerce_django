@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productos</title>
+</head>
+<body>
+    <h1>Lista Productos</h1>
+    <a href="crear/">Agregar nuevo producto</a>
+
+    <hr>
+
+    <div id = 'productos'></div>
+    <script> cargarProductos(); 
+            function cargarProductos() {
+                fetch('/productos/api/productos/')
+                    .then(response => response.json())
+                    .then(productos => {
+                    
+                    const contenedor=document.getElementById('productos');
+
+                    productos.forEach ( producto => {
+
+                        const div = document.createElement('div');
+
+                        div.innerHTML =` 
+                            <h2>${producto.nombre}</h2>
+                            <p>Precio: $${producto.precio}</p>
+                            <p>${producto.descripcion || 'Sin descripción'}</p>
+
+                            <img src="${producto.imagen}" width="150">
+                            <br><br>
+                                            
+                            <!-- Botón de eliminar con el ID dinámico -->
+                            <button class="btn-eliminar" data-id="${producto.id}" style="color: red; cursor: pointer;"> 
+                                🗑️ Eliminar
+                            </button>
+                            <hr>
+                        `;
+                        
+                        const botonEliminar = div.querySelector('.btn-eliminar');
+                        botonEliminar.addEventListener('click', function() {
+                            const idProducto = this.getAttribute('data-id');
+                            if (confirm('¿Seguro que deseas eliminar este producto?')) {
+                                eliminarProducto(idProducto, div);
+                            }
+                        });
+
+                        contenedor.appendChild(div);
+
+                });
+        });
+    }
+            function eliminarProducto(id, elementoHtml) {
+            const csrfToken = '{{ csrf_token }}';
+
+            fetch(`/productos/eliminar/${id}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrfToken
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    elementoHtml.remove();
+                    alert('Producto eliminado correctamente');
+                } else {
+                    alert('Hubo un error al intentar eliminar el producto');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+    </script>
+</body>
+</html>

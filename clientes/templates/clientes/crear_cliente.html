@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %} Crear usuario {% endblock %} 
+
+{% block content %}
+    <a href= "{% url 'clientes:lista_clientes' %}">Volver a lista de clientes</a>
+    <form action="{% url 'clientes:crear_cliente' %}" method = 'POST'>
+        {% csrf_token %}
+
+        <label for="username">Usuario</label>  
+        <input type=" text" id="username" name="username" value="{{ datos.username | default:'' }}" placeholder="Ingresa tu nombre de usuario" >  
+        {% if errores.username  %}
+            <span>
+                {{errores.username}}
+            </span>
+        {% endif %}
+
+        <label for="first_name">Primer nombre</label>
+        <input type="text" id=" first_name" name="first_name" value="{{ datos.first_name | default:'' }}" placeholder="Primer nombre" >
+
+        <label for="last_name">Apellido</label>
+        <input type="text" id="last_name" name="last_name" value="{{ datos.last_name | default:'' }}" placeholder="Apellido" >
+
+        <label for="email">email</label>
+        <input type="email" id="email" name="email" value="{{ datos.email | default:'' }}" placeholder="Ingresa tu email" >
+        {% if errores.email %}
+            <span>
+                {{errores.email}}
+            </span>
+        {% endif %}
+
+        <label for="password">password</label>
+        <input type="password" id="password" name="password" placeholder="Ingresa tu password">
+        {% if errores.password %}
+            <span>
+                {{errores.password}}
+            </span>
+        {% endif %}
+
+            <button type ='submit'> Guardar </button>
+    </form>
+{% endblock %}

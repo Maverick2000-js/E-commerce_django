@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %} Inicio de E commerce {% endblock %}
+
+{% block content %} 
+
+    <h1> Lista clientes </h1>
+
+{% if clientes  %}
+
+<ul>
+    {% for c in clientes %}
+        <li> nombre: {{ c.first_name }} {{ c.last_name }}  </li>
+        <li> username: {{ c.username }} </li> 
+        <li> email: {{ c.email }}  </li> 
+    {% endfor %}
+</ul>
+    
+{% else %}
+        <p>No hay usuarios registrados</p>
+{% endif %}
+{% endblock %}
